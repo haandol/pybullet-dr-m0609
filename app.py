@@ -7,6 +7,8 @@ import signal
 import pybullet as p
 import pybullet_data
 
+from robot import Robot
+
 
 def disconnect(sig, frame):
     print("Disconnecting...")
@@ -24,18 +26,7 @@ class Environment(object):
         p.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         p.setGravity(0, 0, -9.807)
         self.planeId = p.loadURDF("plane.urdf")
-
-    def load_robot(self):
-        startPos = [0, 0, 0]
-        startOrientation = p.getQuaternionFromEuler([0, 0, 0])
-
-        robotId = p.loadURDF(
-            "doosan_robot/m0609.urdf",
-            startPos,
-            startOrientation,
-            useFixedBase=True,
-        )
-        return robotId
+        self.robot = None
 
     def load_red_box(self):
         startPos = [random.uniform(-0.2, 0.2), random.uniform(0.4, 0.8), 0.1]
@@ -76,18 +67,18 @@ class Environment(object):
 
     def load(self):
         self.adjust_camera()
-        robotId = self.load_robot()
-        boxId = self.load_red_box()
-        canId = self.load_blue_can()
+        self.load_red_box()
+        self.load_blue_can()
+        self.robot = Robot()
 
-        cubePos, cubeOrn = p.getBasePositionAndOrientation(robotId)
+        cubePos, cubeOrn = p.getBasePositionAndOrientation(self.robot.id)
         print(cubePos, cubeOrn)
 
-        numJoints = p.getNumJoints(robotId)
+        numJoints = p.getNumJoints(self.robot.id)
         print("numJoints", numJoints)
 
         for joint in range(numJoints):
-            print(p.getJointInfo(robotId, joint))
+            print(p.getJointInfo(self.robot.id, joint))
 
     def update(self):
         p.stepSimulation()
