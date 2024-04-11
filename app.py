@@ -80,6 +80,8 @@ class Environment(object):
         for joint in range(numJoints):
             print(p.getJointInfo(self.robot.id, joint))
 
+        self.robot.open_gripper()
+
     def update(self):
         p.stepSimulation()
         time.sleep(1.0 / 240.0)
