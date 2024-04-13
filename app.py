@@ -81,6 +81,7 @@ class Environment(object):
             print(p.getJointInfo(self.robot.id, joint))
 
         self.robot.open_gripper()
+        self.robot.move()
 
     def update(self):
         p.stepSimulation()
