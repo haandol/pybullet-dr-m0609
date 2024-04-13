@@ -1,5 +1,6 @@
 import math
 
+import numpy as np
 import pybullet as p
 
 
@@ -24,9 +25,9 @@ class Robot(object):
                 self.numJoints += 1
         print(f"numJoints: {self.numJoints}")
 
-        self.rest_poses = [0, 0, 0, 0.5 * math.pi, 0, -math.pi * 0.5 * 0.66, 0]
+        start_joint_pos = [0, 0, 0, 0.5 * math.pi, 0, -math.pi * 0.5 * 0.66, 0]
         for i in range(self.numJoints):
-            p.resetJointState(self.id, i, self.rest_poses[i])
+            p.resetJointState(self.id, i, start_joint_pos[i])
 
         self.closed = True
 
@@ -45,6 +46,9 @@ class Robot(object):
                 min_joint_positions, max_joint_positions
             )
         ]
+        rest_poses = list(
+            (np.array(max_joint_positions) + np.array(min_joint_positions)) / 2
+        )
 
         target_position = [1.0, 1.0, 1.0]
         target_joint_positions = p.calculateInverseKinematics(
@@ -54,7 +58,7 @@ class Robot(object):
             lowerLimits=min_joint_positions,
             upperLimits=max_joint_positions,
             jointRanges=joint_ranges,
-            restPoses=self.rest_poses,
+            restPoses=rest_poses,
         )
 
         for i in range(self.numJoints):
