@@ -6,7 +6,7 @@ import pybullet as p
 class Robot(object):
     def __init__(self) -> None:
         start_pos = [0, 0, 0]
-        start_orientation = p.getQuaternionFromEuler([0, 0, 0])
+        start_orientation = p.getQuaternionFromEuler([0, 0, math.pi / 2])
 
         self.id = p.loadURDF(
             "doosan_robot/m0609.urdf",
@@ -19,12 +19,9 @@ class Robot(object):
         self.ee_index = 10
         self.numJoints = 0
         for i in range(p.getNumJoints(self.id)):
-            if (
-                p.getJointInfo(self.id, i)[2] == p.JOINT_PRISMATIC
-                or p.getJointInfo(self.id, i)[2] == p.JOINT_REVOLUTE
-            ):
+            joint_type = p.getJointInfo(self.id, i)[2]
+            if joint_type == p.JOINT_PRISMATIC or joint_type == p.JOINT_REVOLUTE:
                 self.numJoints += 1
-
         print(f"numJoints: {self.numJoints}")
 
         self.rest_poses = [0, 0, 0, 0.5 * math.pi, 0, -math.pi * 0.5 * 0.66, 0]
@@ -94,14 +91,14 @@ class Robot(object):
             self.id,
             8,
             p.POSITION_CONTROL,
-            targetPosition=0.005,
+            targetPosition=0.0005,
             force=1000,
         )
         p.setJointMotorControl2(
             self.id,
             9,
             p.POSITION_CONTROL,
-            targetPosition=0.005,
+            targetPosition=0.0005,
             force=1000,
         )
         self.closed = True
