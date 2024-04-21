@@ -21,16 +21,17 @@ logging.basicConfig(
 logger = logging.getLogger("app")
 
 
-def get_position_from_user_input():
-    position = None
-    while position is None or len(position) != 3:
-        user_input = input(">>> Enter a xyz positions (x, y, z):")
-        position = user_input.split(",")
-        if len(position) != 3:
+def get_xyz_from_user_input():
+    xyz = None
+    while xyz is None or len(xyz) != 3:
+        user_input = input(">>> Enter a xyz positions (x y z):")
+        xyz = tuple(filter(None, user_input.split(" ")))
+        print(xyz)
+        if len(xyz) != 3:
             logger.error(
                 "Invalid input. Please enter a valid xyz position. Try again..."
             )
-    return [float(p) for p in position]
+    return [float(p) for p in xyz]
 
 
 def disconnect(sig, frame):
@@ -59,8 +60,8 @@ if __name__ == "__main__":
         evt = evt_q.get()
         logger.info(f"[EVT] {evt}")
         if isinstance(evt, EnvironmentReady) or isinstance(evt, RobotMoved):
-            position = get_position_from_user_input()
-            cmd_q.put(MoveToXYZ(position=position))
+            xyz = get_xyz_from_user_input()
+            cmd_q.put(MoveToXYZ(xyz=xyz))
         else:
             logger.error("Unexpected event received: {evt}.\nExiting...")
             break

@@ -10,5 +10,5 @@ class Command(abc.ABC):
 
 @dataclass(frozen=True)
 class MoveToXYZ(Command):
-    position: list[float]
+    xyz: tuple[float]
     action: str = "move-to-xyz"

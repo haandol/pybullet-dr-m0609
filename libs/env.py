@@ -92,7 +92,7 @@ class Environment(mp.Process):
                 cmd = self.cmd_q.get(block=False)
                 logger.info(f"cmd: {cmd}")
                 if isinstance(cmd, MoveToXYZ):
-                    joint_positions = self.robot.move(cmd.position)
+                    joint_positions = self.robot.move(cmd.xyz)
                     for _ in range(100):
                         self.update()
                     self.evt_q.put(RobotMoved(joint_positions=joint_positions))
