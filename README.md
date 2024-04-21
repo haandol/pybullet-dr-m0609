@@ -27,5 +27,5 @@ $ python app.py
 and then, you can send xyz position to control the robot.
 
 ```bash
-Enter a position (x, y, z): 0.5 0.5 0.5
+Enter a position (x y z): 0.5 0.5 0.5
 ```
