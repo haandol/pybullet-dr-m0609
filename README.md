@@ -4,6 +4,8 @@ This is a sample project to control Doosan Robotics M0609 with Panda Gripper usi
 
 You can control the robot by sending xyz position in terminal.
 
+<img src="/docs/arch.png" width="500">
+
 # Installation
 
 copy `.env`
